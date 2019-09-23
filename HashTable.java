@@ -22,22 +22,23 @@ import java.util.Scanner;
 /**
  *
  * @author Ilmari
+ * Note
  */
 public class HashTable {
-    
+
     int koko;
     public arrayObject[] readFile(String fileName, arrayObject[] mainArray){
-        
-        
-   
+
+
+
         int tempkoko = 0;
         try{
-            
 
-            
+
+
          BufferedReader br = new BufferedReader(new FileReader(fileName));
          String readLine;
-          
+
          while((readLine = br.readLine()) != null){
              tempkoko++;
              int key = Integer.parseInt(readLine.trim());
@@ -48,14 +49,14 @@ public class HashTable {
              arrayObject newNode = new arrayObject(Integer.parseInt(readLine.trim()));
              mainArray[hash] = newNode;
              if("setA.txt".equals(fileName)){
-                 
+
                  newNode.foundFromA = true;
                  newNode.A_Line = tempkoko;
              }
              else
                  newNode.foundFromB = true;
              }
-             
+
              else if(mainArray[hash].value == key) {
                   if("setA.txt".equals(fileName)){
                     mainArray[hash].foundFromA = true;
@@ -65,7 +66,7 @@ public class HashTable {
                   }
                   mainArray[hash].incrementCounter();
              }
-             
+
              else if(foundIndex > 0){
                  if(mainArray[foundIndex].foundFromA || mainArray[foundIndex].foundFromB)
                   if("setA.txt".equals(fileName)){
@@ -75,9 +76,9 @@ public class HashTable {
                     mainArray[foundIndex].foundFromB = true;
                   }
                   mainArray[foundIndex].incrementCounter();
-             
+
              }
-            else{    
+            else{
                 while(mainArray[hash] != null){
                     ++hash;
                     hash %= koko;
@@ -91,29 +92,29 @@ public class HashTable {
              }
              else
                  newNode.foundFromB = true;
-      
+
              }
          }
 
          System.out.println("Reading file " +fileName+ " was succesful");
          return mainArray;
         }
-        
+
         catch(IOException e){
             System.out.println("Something went wrong, reading file " + fileName + " was not successful");
         }
-         
-      return null;      
+
+      return null;
     }
     public int getMaxSize(){
         return koko;
     }
     public int hashFunction(int key){
-        
+
         return key % getMaxSize();
     }
-    
-    
+
+
     public void getMaxLines(String fileA, String fileB) throws IOException{
         List<String> linesA = Files.readAllLines(Paths.get(fileA), Charset.defaultCharset());
         List<String> linesB = Files.readAllLines(Paths.get(fileB), Charset.defaultCharset());
@@ -124,7 +125,7 @@ public class HashTable {
             koko = linesB.size() *2;
         //koko = linesA.size() + linesB.size();
 
-        
+
     }
     public void union(arrayObject[] array) throws IOException{
         try{
@@ -132,7 +133,7 @@ public class HashTable {
         ArrayList<String> temp = new ArrayList<>();
         String tempString;
         for(int i = 0; i < array.length; i++){
-            if(array[i] != null){ 
+            if(array[i] != null){
                 tempString="";
                 int length = String.valueOf(array[i].value).length();
                 tempString+= Integer.toString(array[i].value);
@@ -142,7 +143,7 @@ public class HashTable {
                 tempString += Integer.toString(array[i].getCounter());
                 temp.add(tempString);
             }
-            
+
         }
         Collections.sort(temp, new Comparator<String>() {
         @Override
@@ -151,7 +152,7 @@ public class HashTable {
             int n2 = Integer.parseInt(b.split(" ")[0]);
 
             return n1 - n2;
-        } 
+        }
         });
         for(String s : temp){
             textWriter.write(s);
@@ -168,7 +169,7 @@ public class HashTable {
         int arrayHash = hashFunction(key);
         while(array[arrayHash] != null){
             if(array[arrayHash].value == key){
-                
+
                 return arrayHash;
             }
             ++arrayHash;
@@ -182,20 +183,20 @@ public class HashTable {
         ArrayList<String> temp = new ArrayList<>();
         String tempString;
         for(int i = 0; i < array.length; i++){
-            if(array[i] != null){ 
+            if(array[i] != null){
                 tempString = "";
                 int length = String.valueOf(array[i].value).length();
                 if(array[i].foundFromA && array[i].foundFromB){
                     tempString += Integer.toString(array[i].value);
- 
+
                     for(int a = 0; a < 10-length; a++){
                     tempString += " ";
                     }
-                    tempString += Integer.toString(array[i].A_Line); 
+                    tempString += Integer.toString(array[i].A_Line);
                     temp.add(tempString);
                 }
-                
-   
+
+
             }
         }
         Collections.sort(temp, new Comparator<String>() {
@@ -205,7 +206,7 @@ public class HashTable {
             int n2 = Integer.parseInt(b.split(" ")[0]);
 
             return n1 - n2;
-        } 
+        }
         });
         for(String s : temp){
             textWriter.write(s);
@@ -218,7 +219,7 @@ public class HashTable {
             System.out.println("Failed to save file");
         }
     }
-    
+
     public arrayObject[] delete(arrayObject[] array, int key){
         int arrayHash = hashFunction(key);
         while(arrayHash < koko){
@@ -228,22 +229,22 @@ public class HashTable {
                 return array;
             }
             ++arrayHash;
-            
+
         }
         System.out.println("Removing failed");
         return array;
-        
+
     }
-    
+
     public void xor(arrayObject[] array){
         try{
-            
+
         FileWriter textWriter = new FileWriter(new File("xor.txt"));
         ArrayList<String> temp = new ArrayList<>();
         String tempString;
-        
+
         for(int i = 0; i < array.length; i++){
-            
+
             if(array[i] != null){
                 tempString ="";
                 int hash = hashFunction(i);
@@ -262,17 +263,17 @@ public class HashTable {
                 else if(!array[hash].foundFromA && array[hash].foundFromB){
 
                     tempString += Integer.toString(array[hash].value);
-                    
+
                     for(int a = 0; a < 10-length; a++){
                      tempString += " ";
                     }
-                    
+
                     tempString += "2";
                     temp.add(tempString);
                 }
-                
+
             }
-        }        
+        }
         Collections.sort(temp, new Comparator<String>() {
         @Override
         public int compare(String a, String b) {
@@ -280,7 +281,7 @@ public class HashTable {
             int n2 = Integer.parseInt(b.split(" ")[0]);
 
             return n1 - n2;
-        } 
+        }
         });
         for(String s : temp){
             textWriter.write(s);
@@ -293,7 +294,7 @@ public class HashTable {
             System.out.println("Failed to save file");
         }
     }
-    
+
     public static void main(String[] args) throws IOException{
         HashTable harkka = new HashTable();
         System.out.println("Reading data sets...");
@@ -314,12 +315,12 @@ public class HashTable {
             }
             System.out.println("Enter another value you wish to remove or press Enter to create text files");
             line = lukija.nextLine();
-           
+
         }
         harkka.union(mainArray);
         harkka.intersect(mainArray);
         harkka.xor(mainArray);
-        
+
 
     }
 }
